@@ -1,26 +1,46 @@
 import React from 'react';
 import './styles.css';
 import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+    id: number;
+    subject: string;
+    cost: number;
+    user_id: number;
+    name: string;
+    avatar: string;
+    whatsapp: string;
+    bio: string;
+}
+
+interface TeacherItemProps {
+    teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+    function createNewConnection() {
+        api.post('/connections', {
+            user_id: teacher.user_id
+        });
+    }
+
     return (
         <article className="teacher-item">
             <header>
-                <img src="https://avatars2.githubusercontent.com/u/30541507?s=460&v=4" alt="Imagem profile usuário." />
+                <img src={teacher.avatar} alt="Imagem profile do usuário." />
                 <div>
-                    <strong>Valdeci Jeferson</strong>
-                    <span>Química</span>
+                    <strong>{teacher.name}</strong>
+                    <span>{teacher.subject}</span>
                 </div>
             </header>
-            <p>Entusiasta das melhores tecnologias de quimica avançada.
-                        <br /><br />
-                    Apaixonado por explodir coisas me laboratório e por mudar a vida das pesoas através de experiências
-                    emocionantes</p>
+            <p>{teacher.bio}</p>
             <footer>
-                <p>Preço/Hora <strong>R$ 20,00</strong></p>
-                <button type="button">
+                <p>Preço/Hora <strong>R$ {teacher.cost}</strong></p>
+
+                <a target="_blank" href={`https://wa.me/${teacher.whatsapp}`} onClick={createNewConnection} type="button">
                     <img src={whatsappIcon} alt="Whatsapp" /> Entrar em contato
-                        </button>
+                </a>
             </footer>
         </article>
     );
